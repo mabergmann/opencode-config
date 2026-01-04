@@ -253,3 +253,60 @@ Control which actions require approval to run. Configure at global scope or per-
   - Pipelines request approval per command parsed in the pipeline.
 
 For more info about permissions read https://opencode.ai/docs/permissions/
+
+# MCP Servers
+
+Add local and remote MCP tools via the Model Context Protocol (MCP). Once enabled, MCP tools appear alongside built-in tools and can be invoked in prompts (e.g., "use the sentry tool").
+
+- Overview:
+  - MCP servers expose additional tools to the LLM.
+  - Be selective: MCPs add context and can increase token usage.
+
+- Enable and manage:
+  - Define MCP servers in OpenCode config under `mcp` with unique names.
+  - Use `enabled: true/false` to toggle servers.
+  - Tools can be enabled per agent to avoid bloating global context.
+
+- Local servers:
+  - `type: local` with a `command` to start the MCP (supports env vars and timeouts).
+  - Example: `@modelcontextprotocol/server-everything` via `npx`.
+
+- Remote servers:
+  - `type: remote` with `url`; optional `headers` for API keys.
+  - OAuth is auto-handled; you can also authenticate with `opencode mcp auth <name>`.
+
+- OAuth basics:
+  - Automatic detection, dynamic client registration when supported.
+  - Credentials stored securely; can disable auto OAuth per server.
+
+- Per-agent enabling:
+  - Disable MCP tools globally and enable only for specific agents to reduce context.
+  - Use glob patterns to manage multiple MCP tool names.
+
+- Examples:
+  - Sentry: interact with projects/issues; authenticate via `opencode mcp auth sentry`.
+  - Context7: doc search; pass API key via headers if needed.
+  - Grep by Vercel: search GitHub code snippets; invoke with its server name.
+
+- Agent guidance (markdown):
+  - Teach agents to invoke MCP tools via their prompts or AGENTS.md rules.
+    ```Markdown
+    ---
+    description: Research agent
+    mode: subagent
+    tools:
+      webfetch: true
+      # Enable only the needed MCP tool(s) per agent
+      sentry: true
+      context7: true
+    permission:
+      webfetch: ask
+      sentry: allow
+      context7: allow
+    ---
+    When investigating production issues, use the `sentry` tools.
+    When searching documentation, use `context7`.
+    Prefer MCP tools over generic webfetch when available.
+    ```
+
+For more info about MCP servers read https://opencode.ai/docs/mcp-servers/
