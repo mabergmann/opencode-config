@@ -310,3 +310,38 @@ Add local and remote MCP tools via the Model Context Protocol (MCP). Once enable
     ```
 
 For more info about MCP servers read https://opencode.ai/docs/mcp-servers/
+
+# Agent Skills
+
+Define reusable behavior via `SKILL.md` files that agents can load on demand using the built-in `skill` tool.
+
+- Place files (global only):
+  - Global: `~/.config/opencode/skill/<name>/SKILL.md`
+
+- Discovery:
+  - OpenCode loads global skills from your home config under `~/.config/opencode/skill/*/SKILL.md`.
+
+- Frontmatter (required fields):
+  - `name`: lowercase, hyphen-separated; must match directory name.
+  - `description`: 1–1024 characters.
+  - Optional: `license`, `compatibility`, `metadata` (map).
+
+- Name rules:
+  - 1–64 chars, lowercase alphanumeric with single hyphens, no leading/trailing hyphen, no `--`.
+
+- Usage:
+  - Agents see available skills listed in the `skill` tool description.
+  - Load a skill by calling: `skill({ name: "git-release" })`.
+
+- Permissions:
+  - Control access with `permission.skill` patterns; values: `allow`, `ask`, `deny`.
+  - Per-agent overrides supported in agent markdown frontmatter under `~/.config/opencode/agent/<name>.md`.
+  - To disable entirely for an agent, set `tools.skill: false` in its global agent config.
+
+- Troubleshooting:
+  - Ensure `SKILL.md` filename is uppercase.
+  - Include required `name` and `description` in frontmatter.
+  - Names must be unique across locations.
+  - Skills with `deny` are hidden from agents.
+
+For more info about skills read https://opencode.ai/docs/skills/
