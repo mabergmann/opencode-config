@@ -11,7 +11,7 @@ There are **two agent types**.
 **Subagents** are specialists that primary agents can invoke automatically or that you can call explicitly with `@`.
 
 You can **create or customize agents** via:
-* **Markdown files** inside the `agent` folder, where the filename becomes the agent name.
+ * **Markdown files** in `agent/`, where the filename becomes the agent name.
 
 Key configuration options include:
 
@@ -167,9 +167,8 @@ Create custom commands for repetitive tasks that run predefined prompts via the 
 
 - Create command files:
   - Use markdown files in `command/` directories.
-  - Preferred locations:
-    - Global: `~/.config/opencode/command/`
-    - Per-project: `.opencode/command/`
+  - Location (this repo is the global root):
+    - `command/`
   - The file name (without extension) becomes the command name (e.g., `test.md` -> `/test`).
 
 - Configuration formats (prefer markdown over JSON):
@@ -198,6 +197,7 @@ Create custom commands for repetitive tasks that run predefined prompts via the 
 
 - Notes:
   - Commands run in your project’s root directory.
+  - In this repo, the root is `.`.
   - Use allowlists and permissions consistent with your agent/tool policies.
 
 For more info about commands read https://opencode.ai/docs/commands/
@@ -215,7 +215,8 @@ Control which actions require approval to run. Configure at global scope or per-
   - `edit`, `bash`, `skill`, `webfetch`, `doom_loop`, `external_directory`
 
 - Per-agent overrides (markdown):
-  - Agent-specific `permission` overrides global defaults.
+  - Agent-specific `permission` overrides the global defaults configured in this repo.
+    Create or edit: `agent/<name>.md`
     ```Markdown
     ---
     description: Build agent
@@ -266,6 +267,7 @@ Add local and remote MCP tools via the Model Context Protocol (MCP). Once enable
   - Define MCP servers in OpenCode config under `mcp` with unique names.
   - Use `enabled: true/false` to toggle servers.
   - Tools can be enabled per agent to avoid bloating global context.
+  - In this repo, manage config files under `.`.
 
 - Local servers:
   - `type: local` with a `command` to start the MCP (supports env vars and timeouts).
@@ -316,10 +318,10 @@ For more info about MCP servers read https://opencode.ai/docs/mcp-servers/
 Define reusable behavior via `SKILL.md` files that agents can load on demand using the built-in `skill` tool.
 
 - Place files (global only):
-  - Global: `~/.config/opencode/skill/<name>/SKILL.md`
+   - Global: `skill/<name>/SKILL.md`
 
 - Discovery:
-  - OpenCode loads global skills from your home config under `~/.config/opencode/skill/*/SKILL.md`.
+   - OpenCode loads global skills from your home config under `skill/*/SKILL.md`.
 
 - Frontmatter (required fields):
   - `name`: lowercase, hyphen-separated; must match directory name.
@@ -335,7 +337,7 @@ Define reusable behavior via `SKILL.md` files that agents can load on demand usi
 
 - Permissions:
   - Control access with `permission.skill` patterns; values: `allow`, `ask`, `deny`.
-  - Per-agent overrides supported in agent markdown frontmatter under `~/.config/opencode/agent/<name>.md`.
+   - Per-agent overrides supported in agent markdown frontmatter under `agent/<name>.md`.
   - To disable entirely for an agent, set `tools.skill: false` in its global agent config.
 
 - Troubleshooting:
