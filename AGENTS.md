@@ -201,3 +201,55 @@ Create custom commands for repetitive tasks that run predefined prompts via the 
   - Use allowlists and permissions consistent with your agent/tool policies.
 
 For more info about commands read https://opencode.ai/docs/commands/
+
+# Permissions
+
+Control which actions require approval to run. Configure at global scope or per-agent using markdown front matter.
+
+- Concepts:
+  - `allow`: run without approval
+  - `ask`: prompt for approval before running
+  - `deny`: disable the tool/command entirely
+
+- Tools with permission controls:
+  - `edit`, `bash`, `skill`, `webfetch`, `doom_loop`, `external_directory`
+
+- Per-agent overrides (markdown):
+  - Agent-specific `permission` overrides global defaults.
+    ```Markdown
+    ---
+    description: Build agent
+    mode: primary
+    permission:
+      bash:
+        "git push": allow
+        "git status": allow
+        "git diff": allow
+        "*": ask
+    ---
+    Performs build and release tasks with elevated git permissions.
+    ```
+
+- Bash command rules:
+  - Use exact matches or wildcards to target commands.
+  - Wildcards supported: `*` (any chars), `?` (single char).
+  - Examples:
+    ```Markdown
+    ---
+    description: Terraform-safe reviewer
+    mode: subagent
+    permission:
+      bash:
+        "terraform *": deny
+        "*": deny
+        "pwd": allow
+        "git status": ask
+    ---
+    Review code while blocking Terraform operations.
+    ```
+
+- Ask scope behavior:
+  - "accept always" applies for the session, scoped to the first two command tokens (e.g., `git log *`).
+  - Pipelines request approval per command parsed in the pipeline.
+
+For more info about permissions read https://opencode.ai/docs/permissions/
