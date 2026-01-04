@@ -65,3 +65,93 @@ Look for:
 ```
 
 For more info about agents read https://opencode.ai/docs/agents/
+
+# Tools
+
+Agents can be granted capabilities via a Tools section in their markdown config. Tools control what an agent is allowed to do (e.g., read files, edit, run bash) and how.
+
+Key points:
+
+- Enable/disable per tool: Set booleans under `tools` to allow or block capabilities.
+- Fine-grained permissions: Use `permission` to allow, deny, or require approval for specific tools or individual bash commands.
+- Prefer markdown configs: Define tool settings directly in agent markdown front matter.
+- Safety first: Avoid granting broad bash access unless necessary; prefer allowlists.
+
+Common tools:
+
+- `read`: Allows reading files from the filesystem.
+- `write`: Allows creating or overwriting files.
+- `edit`: Allows modifying existing files, with safeguards (must read before edit).
+- `bash`: Allows running shell commands (git, npm, etc.). Supports command-level rules.
+- `webfetch`: Allows fetching content from URLs for analysis.
+- `task`: Allows launching subagents for multi-step autonomous work.
+
+Permission patterns:
+
+- `allow`: Command/tool can run without approval.
+- `deny`: Command/tool is blocked.
+- `ask`: Command/tool requires approval before running.
+
+Examples:
+
+```Markdown
+---
+description: Doc-only reviewer
+mode: subagent
+tools:
+  read: true
+  edit: false
+  write: false
+  bash: false
+  webfetch: false
+permission:
+  read: allow
+---
+
+Only read files and suggest documentation improvements.
+```
+
+```Markdown
+---
+description: Git-aware code reviewer
+mode: subagent
+tools:
+  read: true
+  bash: true
+permission:
+  bash:
+    "git status": allow
+    "git diff": allow
+    "git log*": allow
+    "*": deny
+---
+
+Analyze changes using limited git commands.
+```
+
+```Markdown
+---
+description: Network researcher
+mode: subagent
+tools:
+  webfetch: true
+permission:
+  webfetch: allow
+---
+
+Fetch and summarize external documentation.
+```
+
+Approval workflows:
+
+- Use `ask` for sensitive operations (e.g., `bash` with network or destructive commands).
+- Combine `tools` booleans with `permission` rules to enforce both capability and policy.
+
+Recommendations:
+
+- Start with minimal tool access and expand as needed.
+- For `bash`, prefer explicit allowlists over wildcards.
+- Do not grant `write` or `edit` unless the agent’s role requires file changes.
+- Document the intent of each tool grant in the agent description.
+
+For more info about tools read https://opencode.ai/docs/tools/
