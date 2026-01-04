@@ -10,8 +10,7 @@ There are **two agent types**.
 **Primary agents** are the main assistants you talk to directly; you can switch between them during a session.
 **Subagents** are specialists that primary agents can invoke automatically or that you can call explicitly with `@`.
 
-You can **create or customize agents** via:
- * **Markdown files** in `agent/`, where the filename becomes the agent name.
+You can **create or customize agents** via **Markdown files** in `agent/`, where the filename becomes the agent name.
 
 Key configuration options include:
 
@@ -347,3 +346,54 @@ Define reusable behavior via `SKILL.md` files that agents can load on demand usi
   - Skills with `deny` are hidden from agents.
 
 For more info about skills read https://opencode.ai/docs/skills/
+
+# Available models
+
+These are the models available when creating new agents:
+
+```
+github-copilot/claude-3.5-sonnet
+github-copilot/claude-3.7-sonnet
+github-copilot/claude-3.7-sonnet-thought
+github-copilot/claude-haiku-4.5
+github-copilot/claude-opus-4
+github-copilot/claude-opus-4.5
+github-copilot/claude-opus-41
+github-copilot/claude-sonnet-4
+github-copilot/claude-sonnet-4.5
+github-copilot/gemini-2.0-flash-001
+github-copilot/gemini-2.5-pro
+github-copilot/gemini-3-flash-preview
+github-copilot/gemini-3-pro-preview
+github-copilot/gpt-4.1
+github-copilot/gpt-4o
+github-copilot/gpt-5
+github-copilot/gpt-5-codex
+github-copilot/gpt-5-mini
+github-copilot/gpt-5.1
+github-copilot/gpt-5.1-codex
+github-copilot/gpt-5.1-codex-max
+github-copilot/gpt-5.1-codex-mini
+github-copilot/gpt-5.2
+github-copilot/grok-code-fast-1
+github-copilot/o3
+github-copilot/o3-mini
+github-copilot/o4-mini
+github-copilot/oswe-vscode-prime
+```
+
+# Effective Prompt Engineering for LLMs
+
+## General principles
+
+- Clarity and specificity: Provide clear, concise instructions; define exactly what you want, including any jargon or context up front. Put detailed instructions at the start and specify context, style, and scope. Prefer precise asks over vague ones.
+- Structured formatting: Separate role, context, task, and output using headings or delimiters (e.g., ```markdown fences```, triple quotes, or tags like `<instructions>`, `<context>`, `<input>`). Keep language simple and sections distinct.
+- Explicit output formats and constraints: Specify the desired format (bullet list, table, JSON schema) and limits (length, style). State constraints positively (e.g., “Use a professional tone without heavy jargon”).
+- Relevant context and examples: Include necessary background and few‑shot examples showing the exact format and style you expect. Reference files or data and ask questions about them after the context.
+
+## Autonomous agents
+
+- Role: Define the agent’s persona with input/output expectations and usage rules.
+- Task decomposition: Prompt the agent to outline a plan and work through numbered subtasks systematically.
+- Long‑term planning: Ask for assumptions, risks, and strategy before executing steps.
+
