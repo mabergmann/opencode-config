@@ -155,3 +155,49 @@ Recommendations:
 - Document the intent of each tool grant in the agent description.
 
 For more info about tools read https://opencode.ai/docs/tools/
+
+# Commands
+
+Create custom commands for repetitive tasks that run predefined prompts via the TUI.
+
+- Overview:
+  - Commands are triggered with `/name` in the TUI.
+  - Built-in commands include `/init`, `/undo`, `/redo`, `/share`, `/help`.
+  - Custom commands can override built-ins when using the same name.
+
+- Create command files:
+  - Use markdown files in `command/` directories.
+  - Preferred locations:
+    - Global: `~/.config/opencode/command/`
+    - Per-project: `.opencode/command/`
+  - The file name (without extension) becomes the command name (e.g., `test.md` -> `/test`).
+
+- Configuration formats (prefer markdown over JSON):
+  - Markdown front matter defines properties; file content is the template.
+    ```Markdown
+    ---
+    description: Run tests with coverage
+    agent: build
+    model: anthropic/claude-3-5-sonnet-20241022
+    ---
+    Run the full test suite with coverage report and show any failures.
+    Focus on the failing tests and suggest fixes.
+    ```
+
+- Prompt config helpers:
+  - Arguments: use `$ARGUMENTS` or positional `$1`, `$2`, `$3` inside templates.
+  - Shell output injection: use `!\`command\`` to include bash output (e.g., `!\`npm test\`` or `!\`git log --oneline -10\``).
+  - File references: include files with `@path/to/file.ext` to inline contents.
+
+- Options (front matter / JSON keys):
+  - `template` (required): the prompt content sent to the LLM.
+  - `description` (optional): short summary shown in the TUI.
+  - `agent` (optional): which agent executes the command; defaults to current agent.
+  - `subtask` (optional): if true, forces a subagent invocation to keep primary context clean.
+  - `model` (optional): override the default model for this command.
+
+- Notes:
+  - Commands run in your project’s root directory.
+  - Use allowlists and permissions consistent with your agent/tool policies.
+
+For more info about commands read https://opencode.ai/docs/commands/
