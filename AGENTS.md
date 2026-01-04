@@ -387,13 +387,37 @@ github-copilot/oswe-vscode-prime
 ## General principles
 
 - Clarity and specificity: Provide clear, concise instructions; define exactly what you want, including any jargon or context up front. Put detailed instructions at the start and specify context, style, and scope. Prefer precise asks over vague ones.
-- Structured formatting: Separate role, context, task, and output using headings or delimiters (e.g., ```markdown fences```, triple quotes, or tags like `<instructions>`, `<context>`, `<input>`). Keep language simple and sections distinct.
+- Structured formatting: Separate role, context, task, and output using headings or delimiters (e.g., ```markdown fences``` , triple quotes, or tags like `<instructions>`, `<context>`, `<input>`). Keep language simple and sections distinct.
 - Explicit output formats and constraints: Specify the desired format (bullet list, table, JSON schema) and limits (length, style). State constraints positively (e.g., “Use a professional tone without heavy jargon”).
 - Relevant context and examples: Include necessary background and few‑shot examples showing the exact format and style you expect. Reference files or data and ask questions about them after the context.
-
-## Autonomous agents
-
 - Role: Define the agent’s persona with input/output expectations and usage rules.
 - Task decomposition: Prompt the agent to outline a plan and work through numbered subtasks systematically.
 - Long‑term planning: Ask for assumptions, risks, and strategy before executing steps.
+- It is important for each agent to understand its role in the overall workflow.
 
+# My Workflow
+
+The following roles and phases guide how agents collaborate in this repository. These definitions inform future agent configs under `agent/`.
+
+- Orchestrator: A primary agent you talk to directly, coordinating specialist subagents and moving work through phases.
+- Design phase: Two agents iterate (Writer ↔ Reviewer) on a design doc or experiment plan until both agents agree and you approve.
+- Planning phase: A single agent creates small, atomic steps from the approved plan. Each step is intended to correspond to a future git commit.
+- Implementation phase: Two agents iterate (Implementer ↔ Improver) to complete one planned step at a time, refining code and tests until convergence.
+- Git phase: A git specialist reads diffs, proposes a concise commit message that emphasizes "why", and creates the commit after user approval.
+- Reporting: Two report-focused agents collaborate to produce technical and managerial summaries. Documentation assumes readers with deep code and business context.
+
+Iteration protocol:
+- Two-agent loops continue until both agents explicitly state agreement/ready.
+- Once the agents agree, then the orchestrator requests the user's approval to proceed.
+
+# External Artifacts
+
+Non-versioned assignment documents live outside the repo:
+
+- Base directory: `~/opencode-artifacts/assignments/<assignment-id>/`
+- Subfolders: `design/`, `planning/`, `reports/`; include a minimal `meta.md`
+- IDs: use short hyphenated slugs
+- Access: agents read/write via absolute paths; do not commit
+- Cross-repo: one assignment can reference multiple repos; keep links in `meta.md`
+
+Agent permissions: allow external editing when needed via `permission.external_directory: allow` in agent configs, or `ask` if you want approvals.

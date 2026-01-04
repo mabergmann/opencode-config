@@ -31,11 +31,38 @@ git pull
 - Agent definitions and tips that others can adapt
 - Files are structured to plug directly into opencode’s config directory
 
-## Notes
+## My Workflow
 
-- This repo is not the opencode project itself; it is a configuration layer for it.
-- If you prefer to keep your own fork, replace the clone URL accordingly.
+This config supports a structured agent workflow used day-to-day:
 
-## License
+- Orchestrator: One primary agent coordinates specialist subagents and enforces phase transitions.
+- Design phase: Two agents iterate (Writer ↔ Reviewer) on a design doc or experiment plan until both agree it is ready and the user approves.
+- Planning phase: A single agent decomposes the approved plan into small, atomic steps. Each step is intended to map to a future git commit.
+- Implementation phase: Two agents iterate (Implementer ↔ Improver) to complete one planned step at a time, refining code and tests until convergence.
+- Git phase: A git specialist reads changes, proposes a concise, "why"-focused commit message, and creates the commit upon user approval.
+- Reporting: Two report-focused agents collaborate to produce technical and managerial summaries. Documentation assumes readers with deep code and business context.
 
-See `LICENSE` for details.
+### Typical Usage
+
+- Start with the orchestrator to initiate a design or experiment plan.
+- Alternate the writer and reviewer until the document meets acceptance criteria.
+- Generate granular implementation steps with the planner (each a future commit).
+- Implement steps with implementer and improver, one at a time.
+- Use the git specialist to propose and finalize commit messages.
+- Produce reports with the report writer and reviewer.
+
+## External Artifacts (non-versioned)
+
+Keep cross-repo assignment artifacts outside the repo for privacy and flexibility.
+
+- Location: `~/opencode-artifacts/assignments/<assignment-id>/`
+- Structure: `design/`, `planning/`, `reports/`, plus `meta.md` for links/owners/status
+- IDs: short hyphenated slugs (e.g., `a-2026-01-auth-redesign`)
+- Access: agents read/write via absolute paths; nothing here is committed
+- Cross-links: reference repo files/PRs from artifacts; optional in-repo index file pointing to external paths
+
+To start a new assignment, create the folder and copy your templates:
+```bash
+mkdir -p ~/opencode-artifacts/assignments/a-2026-01-example/{design,planning,reports}
+cp ~/opencode-artifacts/templates/{design.md,plan.md,report.md} ~/opencode-artifacts/assignments/a-2026-01-example/
+```
