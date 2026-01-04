@@ -22,10 +22,11 @@ temp/
 
 # Node/Bun (if used)
 node_modules/
-bun.lockb
+bun.lock
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+package.json
 
 # Python (if used)
 __pycache__/
